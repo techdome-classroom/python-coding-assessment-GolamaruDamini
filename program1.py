@@ -1,10 +1,13 @@
 class Solution:
     def getTotalIsles(self, grid: list[list[str]]) -> int:
-        if not grid or not grid[0]:
+        if not grid or not grid[0]:  # Check for an empty grid
             return 0
 
         rows, cols = len(grid), len(grid[0])
-        visited = [[False for _ in range(cols)] for _ in range(rows)]
+        visited = [[False for _ in range(cols)] for _ in range(rows)]  # Visited cells grid
+
+        # Directions: Up, Down, Left, Right
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
         def dfs(r, c):
             # Boundary and condition checks
@@ -12,21 +15,16 @@ class Solution:
                 return
             # Mark cell as visited
             visited[r][c] = True
-            # Explore the four possible directions (up, down, left, right)
-            dfs(r - 1, c)  # Up
-            dfs(r + 1, c)  # Down
-            dfs(r, c - 1)  # Left
-            dfs(r, c + 1)  # Right
+            # Explore all 4 possible directions
+            for dr, dc in directions:
+                dfs(r + dr, c + dc)
 
         island_count = 0
-
         # Traverse each cell in the grid
         for r in range(rows):
             for c in range(cols):
-                if grid[r][c] == 'L' and not visited[r][c]:
-                    # Found an unvisited land cell; initiate DFS
-                    dfs(r, c)
-                    island_count += 1
+                if grid[r][c] == 'L' and not visited[r][c]:  # Unvisited land cell
+                    dfs(r, c)  # Initiate DFS from this cell
+                    island_count += 1  # Increment island count
 
         return island_count
-
